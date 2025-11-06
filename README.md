@@ -9,7 +9,7 @@
 3. ...
 
 ## Slides and Resources
-
+my brain is cooked
 ## Running this project
 
 This is the finished project for ACM Hack School 2025.\
