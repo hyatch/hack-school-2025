@@ -4,25 +4,25 @@
 const Poll = require("../models/Poll");
 
 // add req, res to parameters
-const getPolls = async () => {
+const getPolls = async (req, res) => {
   const poll = await Poll.find();
   console.log("Returning polls list...");
-  return poll; // refactor for 200 status code response
+  res.status(200).json(poll);
 };
 
 // replace id with req, res in parameters
-const getPoll = async (id) => {
-  // extract id from req.params
+const getPoll = async (req, res) => {
+  const {id} = req.params;
   const poll = await Poll.findById(id);
 
   console.log(`Returning poll ${id}`);
-  return poll; // refactor for 200 status code response
+  res.status(200).json(poll);
 };
 
 // replace {} parameter with req, res
-const postPoll = async ({ ownerId, title, description, options }) => {
-  // extract poll information from req
-  if (!ownerId || !title || !options) return; // replace with 404 Error
+const postPoll = async (req, res) => {
+  const {id, title, description, options} = req.body;
+  res.status(404).json(poll);
 
   const poll = new Poll({
     ownerId: ownerId,
@@ -32,13 +32,13 @@ const postPoll = async ({ ownerId, title, description, options }) => {
   });
 
   await poll.save();
-  return poll; // replace with status code 200 response
+  res.status(200).json(poll);
 };
 
 // replace pollId and optionId with req, res
-const postVote = async ({ pollId, optionId }) => {
-  // extract pollId and optionId from req
-  if (!pollId || !optionId) return; // update for 400 Error
+const postVote = async (req, res) => {
+  const {pollId, optionId} = req.body;
+  res.status(400).json(poll);
 
   const updateOption = await Poll.updateOne(
     { _id: pollId, "options._id": optionId },
@@ -47,13 +47,13 @@ const postVote = async ({ pollId, optionId }) => {
     }
   );
 
-  if (updateOption.modifiedCount == 0) return "Error: failed to update poll"; // update for 400 Error
+  res.status(400).json(poll);
 
   const updatedPoll = await Poll.findById(pollId);
 
   console.log(`Vote cast for ${pollId} on option ${optionId}`);
 
-  return updatedPoll; // update for status code 200 res
+  res.status(200).json(poll);
 };
 
 module.exports = { getPolls, getPoll, postPoll, postVote };
